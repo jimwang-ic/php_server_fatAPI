@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 DNode protocol for PHP
 ======================
 
@@ -40,3 +41,7 @@ The examples have been written to be compatible with the [DNode examples](https:
 ## Development
 
 dnode-php is under heavy development. If you want to participate, please send pull requests.
+=======
+php_server_fatAPI
+=================
+>>>>>>> c22aa26b27bf4e09eb5e1efad4ee9ed0ad88b4fb
