@@ -163,21 +163,26 @@ class FatSecretAPI{
 	}
 	
 	
-	
-	/* Search Food API */
-	/* Author : Jim 
-	   Date : Apr/2/2013 */
+	/* Search Food
+	* @param userID {string} Your ID for the profile
+	* @param search {string} The token for the profile is returned here
+	* @param token {string} The token for the profile is returned here
+	* @param secret {string} The secret for the profile is returned here
+	*/
 	
 	// public method are made available to the network
-	public function foodSearch($user_id,$search,$token,$secret,$callback){
-	
+	public function foodSearch($search,$callback){
+		
+		$user_id = null;
+		$token = null;
+		$secret = null;
+		
 		$url = FatSecretAPI::$base.'method=foods.search';  
 		if (!empty($user_id)) $url .= '&user_id='.$user_id;
 		$url .= '&search_expression='.$search;
 		$url .= '&generic_description=portion';
 		$url .= '&max_results=10';
 		
-	    //$url .= '&oauth_token='.$token;
 		$oauth = new OAuthBase();
 	
 		$normalizedUrl;
@@ -185,7 +190,6 @@ class FatSecretAPI{
 		
 		$signature = $oauth->GenerateSignature($url, $this->_consumerKey, $this->_consumerSecret, $token, $secret, $normalizedUrl, $normalizedRequestParameters);
 		$normalizedRequestParameters .= '&' . OAuthBase::$OAUTH_SIGNATURE . '=' . urlencode($signature);
-		//$normalizedRequestParameters .= '&oauth_token='.$token;
 		
 		$queryResponse = $this->GetQueryResponse($normalizedUrl,$normalizedRequestParameters);
 		
@@ -198,6 +202,31 @@ class FatSecretAPI{
 		$callback($json);
 		
 	}  
+	
+	
+	function getFood($user_id,$food_id,$token,$secret,$callback){
+		
+		$url = FatSecretAPI::$base.'method=food.get&food_id='.$food_id;  
+		if (!empty($user_id)) $url .= '&user_id='.$user_id;
+		
+		$oauth = new OAuthBase();
+	
+		$normalizedUrl;
+		$normalizedRequestParameters;
+		
+		$signature = $oauth->GenerateSignature($url, $this->_consumerKey, $this->_consumerSecret, $token, $secret, $normalizedUrl, $normalizedRequestParameters);
+		$normalizedRequestParameters .= '&' . OAuthBase::$OAUTH_SIGNATURE . '=' . urlencode($signature);
+		
+		$queryResponse = $this->GetQueryResponse($normalizedUrl,$normalizedRequestParameters);
+		
+		$doc = new SimpleXMLElement($queryResponse);        	        
+		
+		$this->ErrorCheck($doc);
+		
+		$json = json_encode($doc);
+		
+		$callback($json);
+	}
 	   
 }
 
